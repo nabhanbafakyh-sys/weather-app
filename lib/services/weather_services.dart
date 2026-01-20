@@ -3,8 +3,6 @@ import 'package:http/http.dart' as http;
 
 class WeatherService {
   static const String apiKey = "daf88a3bdcfefa23a6cdb8d42e3b9d9f";
-
-  /// CURRENT WEATHER
   Future<Map<String, dynamic>> fetchCurrentWeather(String city) async {
     final cleanedCity = city.trim();
 
@@ -26,7 +24,6 @@ class WeatherService {
     }
   }
 
-  /// HOURLY FORECAST (FREE API)
   Future<Map<String, dynamic>> fetchHourlyForecast(String city) async {
     final cleanedCity = city.trim();
 
