@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
-  static const String apiKey = "daf88a3bdcfefa23a6cdb8d42e3b9d9f";
+  static const String apiKey = "5b8065a471226ffc4e7479c999721128";
   Future<Map<String, dynamic>> fetchCurrentWeather(String city) async {
     final cleanedCity = city.trim();
 
