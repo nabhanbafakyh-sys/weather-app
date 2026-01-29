@@ -1,26 +1,24 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../model/weather_model.dart';
 
 class WeatherService {
-  static const String apiKey = "5b8065a471226ffc4e7479c999721128";
-  Future<Map<String, dynamic>> fetchCurrentWeather(String city) async {
+  final String _apiKey = "4f91d3eddf8f65e751c92e3248d6006a";
+
+  Future<WeatherModel> fetchCurrentWeather(String city) async {
     final cleanedCity = city.trim();
 
     final url = Uri.parse(
       "https://api.openweathermap.org/data/2.5/weather"
-      "?q=$cleanedCity&units=metric&appid=$apiKey",
+      "?q=$cleanedCity&units=metric&appid=$_apiKey",
     );
-
-    print("CURRENT URL: $url");
 
     final response = await http.get(url);
 
-    print("CURRENT STATUS: ${response.statusCode}");
-
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return weatherModelFromJson(response.body);
     } else {
-      throw Exception("City not found");
+      throw Exception("Failed to load weather");
     }
   }
 
@@ -29,19 +27,15 @@ class WeatherService {
 
     final url = Uri.parse(
       "https://api.openweathermap.org/data/2.5/forecast"
-      "?q=$cleanedCity&units=metric&appid=$apiKey",
+      "?q=$cleanedCity&units=metric&appid=$_apiKey",
     );
 
-    print("HOURLY URL: $url");
-
     final response = await http.get(url);
-
-    print("HOURLY STATUS: ${response.statusCode}");
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      throw Exception("Hourly forecast error");
+      throw Exception("Failed to load hourly forecast");
     }
   }
 }
