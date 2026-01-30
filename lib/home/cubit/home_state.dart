@@ -1,17 +1,19 @@
-part of 'home_cubit.dart';
+import '../../model/weather_model.dart';
 
-sealed class HomeState {}
+abstract class HomeState {}
 
-final class HomeInitial extends HomeState {}
+class HomeInitial extends HomeState {}
 
-final class Weather extends HomeState {
+class HomeLoading extends HomeState {}
+
+class Weather extends HomeState {
   final WeatherModel climate;
-  final List hourlyList;
+  final List<dynamic> hourlyList;
 
   Weather({required this.climate, required this.hourlyList});
 }
 
-final class HomeError extends HomeState {
+class HomeError extends HomeState {
   final String message;
   HomeError(this.message);
 }

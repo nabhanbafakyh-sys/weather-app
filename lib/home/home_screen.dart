@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/service/service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'cubit/home_cubit.dart';
+import 'cubit/home_state.dart';
 import '../widgets/details.dart';
 import '../widgets/hour_card.dart';
 import '../search/search_screen.dart';
@@ -11,42 +12,50 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: BlocProvider(
-          create: (_) => HomeCubit(WeatherService())..loadWeather("London"),
+    return BlocProvider(
+      create: (_) => HomeCubit()..loadWeather("London"),
+      child: Scaffold(
+        body: SafeArea(
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
+              if (state is HomeLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
               if (state is Weather) {
                 final weather = state.climate;
                 final hourlyList = state.hourlyList;
+
                 return SingleChildScrollView(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.location_pin, color: Colors.blueGrey),
+                          const Icon(
+                            Icons.location_pin,
+                            color: Colors.blueGrey,
+                          ),
                           Text(
                             weather.cityName,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           IconButton(
-                            icon: Icon(Icons.search),
+                            icon: const Icon(Icons.search),
                             onPressed: () async {
                               final result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => SearchScreen(),
+                                  builder: (_) => const SearchScreen(),
                                 ),
                               );
 
-                              if (result != null && result is String) {
+                              if (result is String) {
                                 context.read<HomeCubit>().loadWeather(result);
                               }
                             },
@@ -54,13 +63,13 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
 
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       Center(
                         child: Column(
                           children: [
                             Text(
                               "${weather.temperature.round()}°C",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 64,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -75,15 +84,17 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 30),
-                      Text(
+
+                      const SizedBox(height: 30),
+                      const Text(
                         "Hourly Forecast",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(height: 12),
+
+                      const SizedBox(height: 12),
                       SizedBox(
                         height: 120,
                         child: ListView.builder(
@@ -100,19 +111,21 @@ class HomeScreen extends StatelessWidget {
                           },
                         ),
                       ),
-                      SizedBox(height: 30),
-                      Text(
+
+                      const SizedBox(height: 30),
+                      const Text(
                         "Details",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(height: 12),
+
+                      const SizedBox(height: 12),
                       GridView.count(
                         crossAxisCount: 2,
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         crossAxisSpacing: 18,
                         mainAxisSpacing: 15,
                         childAspectRatio: 1.2,
@@ -128,7 +141,7 @@ class HomeScreen extends StatelessWidget {
                             value: "${weather.windSpeed} m/s",
                           ),
                           DetailCard(
-                            icon: Icons.thermostat_sharp,
+                            icon: Icons.thermostat,
                             title: "Feels Like",
                             value: "${weather.feelsLike.round()}°",
                           ),
@@ -143,10 +156,12 @@ class HomeScreen extends StatelessWidget {
                   ),
                 );
               }
+
               if (state is HomeError) {
                 return Center(child: Text(state.message));
               }
-              return SizedBox();
+
+              return const SizedBox();
             },
           ),
         ),
