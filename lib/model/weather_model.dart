@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 part 'weather_model.g.dart';
 
-WeatherModel weatherModelFromJson(String str) =>
-    WeatherModel.fromJson(json.decode(str));
+// WeatherModel weatherModelFromJson(String str) =>
+//     WeatherModel.fromJson(json.decode(str));
 
 @JsonSerializable()
 class WeatherModel {
