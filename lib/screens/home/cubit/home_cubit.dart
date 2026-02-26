@@ -2,15 +2,18 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
-import '../../model/weather_model.dart';
+import '../../../model/weather_model.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit() : super(HomeInitial());
-
+  HomeCubit() : super(HomeInitial()) {
+    loadWeather("kochi");
+    // fetchCurrentWeather('');
+    // fetchHourlyForecast('');
+  }
   final String _apiKey = "4f91d3eddf8f65e751c92e3248d6006a";
 
-  Future<WeatherModel> _fetchCurrentWeather(String city) async {
+  Future<WeatherModel> fetchCurrentWeather(String city) async {
     final url = Uri.parse(
       "https://api.openweathermap.org/data/2.5/weather"
       "?q=$city&units=metric&appid=$_apiKey",
@@ -25,7 +28,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  Future _fetchHourlyForecast(String city) async {
+  Future fetchHourlyForecast(String city) async {
     final url = Uri.parse(
       "https://api.openweathermap.org/data/2.5/forecast"
       "?q=$city&units=metric&appid=$_apiKey",
@@ -45,8 +48,8 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeLoading());
 
     try {
-      final weatherData = await _fetchCurrentWeather(city);
-      final hourly = await _fetchHourlyForecast(city);
+      final weatherData = await fetchCurrentWeather(city);
+      final hourly = await fetchHourlyForecast(city);
 
       emit(Weather(climate: weatherData, hourlyList: hourly));
     } catch (e) {

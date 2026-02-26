@@ -1,4 +1,4 @@
-import '../../model/weather_model.dart';
+import '../../../model/weather_model.dart';
 
 abstract class HomeState {}
 
